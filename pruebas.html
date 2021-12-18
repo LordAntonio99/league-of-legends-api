@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        fetch('http://ddragon.leagueoflegends.com/cdn/11.24.1/data/en_US/champion.json')
+        .then((r) => {
+            return r.json();
+        })
+        .then((e) => {
+            Object.entries(e.data).map((name) => {
+                console.log(name[1])
+            })
+        })
+    </script>
+    
+</body>
+</html>

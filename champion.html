@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Document</title>
+</head>
+<body class="bg-purple-50">
+    <div class="w-full h-24 bg-purple-800 shadow-xl shadow-purple-800/40 flex justify-start items-center">
+        <div class="ml-8">
+            <a href="index.html"><h1 class="text-purple-50 text-4xl font-bold uppercase">Lol Champions</h1></a>
+        </div>
+    </div>
+    <div id='champion'>
+        <div class="mx-8 my-8 flex flex-col-reverse">
+            <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Aatrox_0.jpg" class="xl:relative xs:w-full xl:w-full xl:h-[40vw] md:h-[52vw] sm:h-[60vw] object-cover rounded-lg shadow-xl shadow-purple-800/20" id="image" alt="SplashArt" >
+            <div class="xl:absolute md:w-full lg:w-full xl:mx-12 xl:my-12 my-4 xl:w-1/2 p-4 rounded-lg xl:bg-black/70 lg:bg-black/70 md:bg-black/70 sm:bg-black/70 ">
+                <h1 id="name" class="w-full text-white text-3xl font-bold">Nombre</h1>
+                <h1 id="title" class="w-full text-white text-2xl font-bold">Description</h1>
+                <h1 id="lore" class="w-auto text-white text-xl">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Minima harum quo ad! Eveniet minima veniam ratione recusandae officiis voluptatibus possimus. Incidunt itaque suscipit similique fugiat repellendus? Quasi commodi autem velit?</h1>
+            </div>
+        </div>
+        <div class="mx-8 my-8 grid sm:grid-cols-1 xl:grid-cols-2 gap-8   ">
+            <div class="p-4 rounded-lg bg-purple-100 shadow-xl shadow-purple-800/10">
+                <h1 class="text-xl text-purple-800 font-bold uppercase mb-4">Ally tips</h1>
+                <ul id="allyTips">
+
+                </ul>
+            </div>
+            <div class="p-4 rounded-lg bg-purple-100 shadow-xl shadow-purple-800/10">
+                <h1 class="text-xl  text-purple-800 font-bold uppercase mb-4">Enemy tips</h1>
+                <ul id="enemyTips">
+
+                </ul>
+            </div>
+        </div>
+        <div class="mx-8 my-8 p-4 rounded-lg shadow-xl shadow-purple-800/10 ">
+            <h1 class="text-xl text-purple-800 font-bold uppercase mb-4">Skills</h1>
+            <div id="spells" class="grid sm:grid-cols-1 xl:grid-cols-2 gap-8">
+            </div>
+        </div>
+        </div>
+        <div class="mx-8 my-8 p-4 rounded-lg shadow-xl shadow-purple-800/10 ">
+            <h1 class="text-xl text-purple-800 font-bold uppercase  mb-4">Skins</h1>
+            <div id="skins" class="grid sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+            </div>
+        </div>
+        <script>
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const Id = urlParams.get('id');
+        const championId = Id.charAt(0).toUpperCase() + Id.slice(1);
+        console.log(championId)
+        
+        
+        fetch(`https://ddragon.leagueoflegends.com/cdn/11.24.1/data/en_US/champion/${championId}.json`)
+            .then((r) => {
+                return r.json();
+            })
+            .catch(() => {
+                    location.href = 'index.html'
+                })
+            .then((e) => {
+                console.log(e.data);
+                document.getElementById('name').innerHTML = e.data[championId].name;
+                document.getElementById('title').innerHTML = e.data[championId].title;
+                document.getElementById('lore').innerHTML = e.data[championId].lore;
+                document.getElementById('image').src = `https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${e.data[championId].id}_0.jpg`;
+                e.data[championId].allytips.map((t) => {
+                    document.getElementById('allyTips').innerHTML += `<li><h1 class="text-md text-purple-800">${t}</h1></li>`
+                })
+                e.data[championId].enemytips.map((t) => {
+                    document.getElementById('enemyTips').innerHTML += `<li><h1 class="text-md text-purple-800">${t}</h1></li>`
+                })
+                e.data[championId].spells.map((t) => {
+                    document.getElementById('spells').innerHTML += `<div class="flex justify-start items-center p-4 rounded-lg shadow-xl bg-purple-100 shadow-purple-800/10"><img src="https://ddragon.leagueoflegends.com/cdn/11.24.1/img/spell/${t.id}.png" alt="" class="rounded-lg w-20 h-20 shadow-md shadow-purple-800/20"><div class="mx-8"><h1 class="text-purple-800 font-bold text-lg uppercase">${t.name}</h1><h1 class='text-purple-800'>${t.description}</h1></div></div>`
+                })
+                e.data[championId].skins.map((t) => {
+                    document.getElementById('skins').innerHTML += `<div class="p-4 rounded-lg bg-purple-100 shadow-xl shadow-purple-800/10"><img src="http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${championId}_${t.num}.jpg" alt="" class="rounded"><h1 class="my-4 text-purple-800 text-center font-bold text-lg uppercase">${t.name}</h1></div>`
+                })
+            })
+    </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Summoner stats</title>
+</head>
+<body>
+    <script>
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const summonerName = urlParams.get('summonerName');
+        console.log(summonerName);
+
+        fetch(`https://euw1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${summonerName}?api_key=RGAPI-e4c39bba-4a08-472c-bb3a-32273ab67b04`)
+            .then((r) => {
+                return r.json();
+            })
+            .catch(() => {
+                location.href = 'index.href';
+            })
+            .then((e) => {
+                console.log(e);
+                const profileIcon = e.profileIconId;
+                document.getElementById('summonerName').innerHTML = `Summoner ${e.name}`
+                document.getElementById('profileIcon').src = `https://ddragon.leagueoflegends.com/cdn/11.24.1/img/profileicon/${profileIcon}.png`
+            })
+    </script>
+    <div class="w-full h-24 bg-purple-800 shadow-xl shadow-purple-800/40 flex justify-start items-center">
+        <div class="ml-8">
+            <h1 class="text-purple-50 text-4xl font-bold uppercase">Lol Helper</h1>
+        </div>
+    </div>
+    <div class="w-full ml-8 mt-8">
+        <h1 class="text-3xl font-bold" id="summonerName">Summoner:</h1>
+        <img src="" alt="Summoner icon" id="profileIcon">
+    </div>
+
+</body>
+</html>

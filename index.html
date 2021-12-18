@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/dist/output.css" rel="stylesheet">
+    <title>Lol Champions</title>
+</head>
+<body class="bg-purple-50">
+    <div class="w-full h-24 bg-purple-800 shadow-xl shadow-purple-800/40 flex justify-start items-center">
+        <div class="ml-8">
+            <h1 class="text-purple-50 text-4xl font-bold uppercase">Lol Helper</h1>
+        </div>
+    </div>
+    <div class="w-full flex justify-center items-center">
+        <form action="champion.html" class="xl:w-1/2 md:w-1/2 w-full min-h-min h-auto my-12 rounded-xl border-2 border-purple-800 flex flex-col justify-center items-center overflow-hidden shadow-xl shadow-purple-800/40">
+            <input type="text" id="id" name="id" placeholder="Search for a champion" class="w-full h-12 focus:outline-none text-xl text-center text-purple-800 placeholder:text-purple-800/80" >
+            <ul id="ul" class="bg-purple-50 text-center text-xl text-purple-800">
+
+            </ul>
+        </form>
+    </div>
+    <div class="mx-8 mt-8 w-100">
+        <h1 class="text-3xl font-bold text-purple-800 uppercase text-center">Champion List</h1>
+        <div class="grid grid-flow-row xl:grid-cols-3 sm:grid-cols-1 gap-4" id="champions">
+            <script>
+                const championsGrid = document.getElementById('champions');
+                let championList = [];
+                fetch('http://ddragon.leagueoflegends.com/cdn/11.24.1/data/en_US/champion.json')
+                .then((r) => {
+                    return r.json();
+                })
+                .then((e) => {
+                    Object.entries(e.data).map((name) => {
+                        championList.push(name[1].id.charAt(0).toUpperCase() + name[1].id.slice(1));
+                        championsGrid.innerHTML += `<div class="shadow-xl shadow-purple-800/30 rounded-xl flex flex-col overflow-hidden" ><img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${name[1].id}_0.jpg" alt="Champion Splashart" class="w-full my-4 rounded-lg shadow-xl shadow-purple-800/20"><h1 class="my-4 mx-4 w-full text-2xl text-purple-800 font-bold text-center uppercase">${name[1].name}</h1><p class="text-xl text-purple-800 mx-4 my-4">${name[1].blurb}</p><a href="champion.html?id=${name[1].id}" class="w-[100%] h-14 bg-purple-800 text-purple-50 font-bold flex justify-center items-center mt-auto uppercase">Read more</a></div>`;
+                    })
+                })
+
+
+                document.getElementById('id').addEventListener('input', (e) => {
+                    let championsArray = [];
+                    if(e.target.value) {
+                        championsArray = championList.filter(champion => champion.toLowerCase().includes(e.target.value));
+                        championsArray = championsArray.map((champion) => `<li><a href='champion.html?id=${champion}'>${champion}</a></li>`)
+                    }
+                    const html = !championsArray ? '' : championsArray.join('');
+                    document.getElementById('ul').innerHTML = html;
+                })
+
+
+            </script>
+        </div>
+    </div>
+</body>
+</html>
